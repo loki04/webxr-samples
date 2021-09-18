@@ -34,6 +34,7 @@ const SEGMENTS = 30;
 const MAX_FPS = 90;
 
 class StatsMaterial extends Material {
+/*
   get materialName() {
     return 'STATS_VIEWER';
   }
@@ -59,22 +60,29 @@ class StatsMaterial extends Material {
       return vColor;
     }`;
   }
+*/
 }
 
 function segmentToX(i) {
+/*
   return ((0.9/SEGMENTS) * i) - 0.45;
+*/
 }
 
 function fpsToY(value) {
+/*
   return (Math.min(value, MAX_FPS) * (0.7 / MAX_FPS)) - 0.45;
+*/
 }
 
 function fpsToRGB(value) {
+/*
   return {
     r: Math.max(0.0, Math.min(1.0, 1.0 - (value/60))),
     g: Math.max(0.0, Math.min(1.0, ((value-15)/(MAX_FPS-15)))),
     b: Math.max(0.0, Math.min(1.0, ((value-15)/(MAX_FPS-15)))),
   };
+*/
 }
 
 let now = (window.performance && performance.now) ? performance.now.bind(performance) : Date.now;
@@ -82,7 +90,7 @@ let now = (window.performance && performance.now) ? performance.now.bind(perform
 export class StatsViewer extends Node {
   constructor() {
     super();
-
+/*
     this._performanceMonitoring = false;
 
     this._startTime = now();
@@ -107,10 +115,11 @@ export class StatsViewer extends Node {
       0, 0.075, 0, 0,
       0, 0, 1, 0,
       -0.3625, 0.3625, 0.02, 1,
-    ]);
+    ]);*/
   }
 
   onRendererChanged(renderer) {
+/*
     this.clearNodes();
 
     let gl = renderer.gl;
@@ -175,22 +184,30 @@ export class StatsViewer extends Node {
 
     this.addNode(this._fpsNode);
     this.addNode(this._sevenSegmentNode);
+*/
   }
 
   get performanceMonitoring() {
+/*
     return this._performanceMonitoring;
+*/
   }
 
   set performanceMonitoring(value) {
+/*
     this._performanceMonitoring = value;
     this._fpsStep = value ? 1000 : 250;
+*/
   }
 
   begin() {
+/*
     this._startTime = now();
+*/
   }
 
   end() {
+/*
     let time = now();
 
     let frameFps = 1000 / (time - this._prevFrameTime);
@@ -213,9 +230,11 @@ export class StatsViewer extends Node {
       this._frames = 0;
       this._fpsMin = 0;
     }
+*/
   }
 
   _updateGraph(valueLow, valueHigh) {
+/*
     let color = fpsToRGB(valueLow);
     // Draw a range from the low to high value. Artificially widen the
     // range a bit to ensure that near-equal values still remain
@@ -264,5 +283,6 @@ export class StatsViewer extends Node {
     this._lastSegment = (this._lastSegment+1) % SEGMENTS;
 
     this._sevenSegmentNode.text = `${this._fpsAverage} FP5`;
+*/
   }
 }

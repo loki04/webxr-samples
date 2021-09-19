@@ -58,17 +58,18 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 
       
-class CubeSeaMaterial extends Material {
-  constructor(heavy = false) {
+class CustomMaterial extends Material {
+  constructor(heavy = false, name="def") {
     super();
 
     this.heavy = heavy;
+    this.name = name;
 
     this.baseColor = this.defineSampler('baseColor');
   }
 
   get materialName() {
-    return 'CUBE_SEA';
+    return this.name;
   }
 
   get vertexSource() {
@@ -81,8 +82,8 @@ class CubeSeaMaterial extends Material {
     varying vec3 vLight;
 
     const vec3 lightDir = vec3(0.75, 0.5, 1.0);
-    const vec3 ambientColor = vec3(0.5, 0.5, 0.5);
-    const vec3 lightColor = vec3(0.75, 0.75, 0.75);
+    const vec3 ambientColor = vec3(0.8, 0.8, 0.8);
+    const vec3 lightColor = vec3(0.95, 0.95, 0.95);
 
     vec4 vertex_main(mat4 proj, mat4 view, mat4 model) {
       vec3 normalRotated = vec3(model * vec4(NORMAL, 0.0));
@@ -107,8 +108,8 @@ class CubeSeaMaterial extends Material {
     out vec3 vLight;
 
     const vec3 lightDir = vec3(0.75, 0.5, 1.0);
-    const vec3 ambientColor = vec3(0.5, 0.5, 0.5);
-    const vec3 lightColor = vec3(0.75, 0.75, 0.75);
+    const vec3 ambientColor = vec3(0.8, 0.8, 0.8);
+    const vec3 lightColor = vec3(0.95, 0.95, 0.95);
 
     vec4 vertex_main(mat4 left_proj, mat4 left_view, mat4 right_proj, mat4 right_view, mat4 model) {
       vec3 normalRotated = vec3(model * vec4(NORMAL, 0.0));
@@ -248,10 +249,10 @@ class CubeSeaMaterial extends Material {
       let boxes = [];
 
 
-      let letter = new Gltf2Node({url: 'media/gltf/letter/letter_e.gltf'});
+      let letter = new Gltf2Node({url: 'media/gltf/letter/letter_t.gltf'});
       letter.scale = [0.5, 0.5, 0.5];
       letter.translation = [-5, -10, -5];
-      quat.fromEuler(letter.rotation, 60.0, 0.0, 0.0);
+      quat.fromEuler(letter.rotation, 40.0, -60.0, 20.0);
       scene.addNode(letter)
 
 
@@ -262,8 +263,8 @@ class CubeSeaMaterial extends Material {
       //scene.addNode(solarSystem);
 
       // Still adding a skybox, but only for the benefit of the inline view.
-      let skybox = new SkyboxNode({url: 'media/textures/milky-way-4k.png'});
-      scene.addNode(skybox);
+      //let skybox = new SkyboxNode({url: 'media/textures/milky-way-4k.png'});
+      //scene.addNode(skybox);
 
       function initXR() {
         xrButton = new WebXRButton({
@@ -331,30 +332,26 @@ class CubeSeaMaterial extends Material {
           boxNode.addRenderPrimitive(boxRenderPrimitive);
           // Marks the node as one that needs to be checked when hit testing.
           //boxNode.selectable = true;
+          let s = Math.random() * 2.0 + 0.5;
           boxes.push({
             node: boxNode,
             renderPrimitive: boxRenderPrimitive,
             position: [x, y, z],
-            scale: [1, 1, 1],
+            scale: [s, s, s],
           });
           scene.addNode(boxNode);
         }
 
-        var _material01 = new CubeSeaMaterial(true);
+        var _material01 = new CustomMaterial(true, "box03");
         _material01.baseColor.texture = new UrlTexture('media/textures/box01.png');
-        var _material02 = new CubeSeaMaterial(true);
-        _material02.baseColor.texture = new UrlTexture('media/textures/box01.png');
-        var _material03 = new CubeSeaMaterial(true);
-        _material03.baseColor.texture = new UrlTexture('media/textures/box01.png');
-        addBox( Math.random() * 4.0 -2.0,
-                Math.random() * 4.0 -2.0,
-                Math.random() * 4.0 -2.0, 1.0, 0.0, 0.0, _material01);      
-        addBox( Math.random() * 4.0 -2.0,
-                Math.random() * 4.0 -2.0,
-                Math.random() * 4.0 -2.0, 1.0, 0.0, 0.0, _material02);      
-        addBox( Math.random() * 4.0 -2.0,
-                Math.random() * 4.0 -2.0,
-                Math.random() * 4.0 -2.0, 1.0, 0.0, 0.0, _material03);      
+        // (Math.random() -0.5) * 10.0
+        addBox( -1.0, 2.0, -5.0,    1.0, 0.0, 0.0, _material01);      
+        addBox(  5.0, 0.0,  0.0,    1.0, 0.0, 0.0, _material01);      
+        addBox( -2.0, 2.0,  3.0,    1.0, 0.0, 0.0, _material01);      
+
+        addBox( (Math.random() -0.5) * 10.0, (Math.random() -0.5) * 2.0, (Math.random() -0.5) * 10.0,    1.0, 0.0, 0.0, _material01);      
+        addBox( (Math.random() -0.5) * 10.0, (Math.random() -0.5) * 2.0, (Math.random() -0.5) * 10.0,    1.0, 0.0, 0.0, _material01);      
+        addBox( (Math.random() -0.5) * 10.0, (Math.random() -0.5) * 2.0, (Math.random() -0.5) * 10.0,    1.0, 0.0, 0.0, _material01);      
 
       }
 
@@ -364,7 +361,7 @@ class CubeSeaMaterial extends Material {
         if (session.isImmersive) {
           // When in 'immersive-ar' mode don't draw an opaque background because
           // we want the real world to show through.
-          skybox.visible = false;
+          //skybox.visible = false;
         }
 
         initGL();
@@ -390,7 +387,7 @@ class CubeSeaMaterial extends Material {
         if (event.session.isImmersive) {
           xrButton.setSession(null);
           // Turn the background back on when we go back to the inlive view.
-          skybox.visible = true;
+          //skybox.visible = true;
         }
       }
 
